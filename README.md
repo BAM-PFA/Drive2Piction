@@ -6,6 +6,20 @@ Currently, for each quarterly program guide published by BAMPFA, staff have to g
 
 Because trying to FTP directly from Drive to Piction is more of a pain than it's worth, these scripts read from a local folder that is synced to the Drive folder our designer uses.
 
+Here's the folder structure the scripts expect in the Drive-synced folder
+
+* Program Guide Images June/July/August 2017
+    - Art images
+    - Film images
+    - Event images
+
+And here's the FTP folder structure that Piction expects:
+
+* Research\_Hub\_Collections
+    - RH\_Events
+    - RH\_Gallery\_Exhibitions
+    - RH\_PFA\_Film\_Stills\_Series\_Collection
+
 ### File validation
 
 The first step in processing the local synced folder is to check each file against the [filenaming conventions](https://docs.google.com/document/d/1gvPV2pyvgX9XgkxrmfKdFI4W6wJ48Z9RK451e4hhUDM/edit?usp=sharing) created by BAMPFA. Any files that don't match the prescribed rules for various categories of image \(or are not an approved filetype\) get rejected. This also includes matching various date formats, which are required for some types of images. Approved files get copied from the synced folder into a set of folders that match the Piction FTP folder structure. 
