@@ -113,8 +113,7 @@ def checkFilenameFormat(base,filePath):
 					currentAction = "exhibition image already rejected"
 					statusLog(currentAction,filePath,base)
 
-
-
+# MASTER SCRIPT POINTS HERE, THIS IS THE STARTING POINT
 
 def process(folder):
 	for item in glob(folder,recursive=True):

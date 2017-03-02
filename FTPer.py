@@ -1,6 +1,6 @@
 #! usr/bin/env python
 
-import os, re, pexpect, sys, subprocess
+import os, re, pexpect
 from glob import glob
 from ftpLogger import statusLog
 

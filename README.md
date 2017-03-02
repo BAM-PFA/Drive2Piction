@@ -20,6 +20,10 @@ And here's the FTP folder structure that Piction expects:
     - RH\_Gallery\_Exhibitions
     - RH\_PFA\_Film\_Stills\_Series\_Collection
 
+Non-standard Python modules used:
+[pyfiglet](https://github.com/pwaller/pyfiglet)
+[pexpect](https://github.com/pexpect/pexpect)
+
 ### File validation
 
 The first step in processing the local synced folder is to check each file against the [filenaming conventions](https://docs.google.com/document/d/1gvPV2pyvgX9XgkxrmfKdFI4W6wJ48Z9RK451e4hhUDM/edit?usp=sharing) created by BAMPFA. Any files that don't match the prescribed rules for various categories of image \(or are not an approved filetype\) get rejected. This also includes matching various date formats, which are required for some types of images. Approved files get copied from the synced folder into a set of folders that match the Piction FTP folder structure. 
@@ -37,7 +41,7 @@ A logging script notes each step of processing an image. Here are some examples:
 >##################################################
 >
 >shirt_2017-01-23_002.jpg: This exhibition file is being checked ...
->shirt_2017-01-23_002.jpg: Filename format is ok, proceeding to check the >date ...
+>shirt_2017-01-23_002.jpg: Filename format is ok, proceeding to check the date ...
 >shirt_2017-01-23_002.jpg: SUCCESS, you didn't muck up the filename, let's see if it's already in Piction .... 
 >shirt_2017-01-23_002.jpg This file is ready to be FTPed
 >
