@@ -35,15 +35,23 @@ def put(folder):
 						print(file+"to ftp")
 						currentAction = "now ftp per file"
 						statusLog(currentAction,pwd,file)
-						child.expect('ftp>')
-						child.sendline('mput '+file) 
+						try:
+							child.expect('ftp>')
+							child.sendline('mput '+file)
+							currentAction = "ftp file success"
+							statusLog(currentAction,pwd,file)
+						except Error as error:
+							currentAction = "ftp file failure"
+							statusLog(currentAction,pwd,file)
 			try:
 				child.expect('ftp>')
-				currentAction = "ftp success"
+				currentAction = "ftp folder success"
 				print("SUCCESS WE FTPeD "+source)
+				statusLog(currentAction,pwd,source)
 			except Error as error:
-				child.expect('ftp>')
+				currentAction = "failed to FTP"
 				print("FAILED TO ftp "+source)
+				pass
 			os.chdir(root)
 
 	# child.interact()

@@ -12,6 +12,7 @@ exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
 pathToLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_checker-log.txt"
 
 fig = Figlet(font='fantasy_')
+isoFig = Figlet(font='isometric3')
 
 def statusLog(currentAction,filePath,base):
 	with open(pathToLog,"a") as log:
@@ -72,10 +73,12 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "bad date":
 			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+":  Oops, the date format is incorrect, please check it and rename it.\r\r"+("#"*50)+"\r\r")
 
-		# ACCEPTING FILENAME FORMAT, CHECKING FOR DUPE IN PICTION
+		# ACCEPTING FILENAME FORMAT, CHECKING FOR DUPE IN PICTION FTP LIST
 
 		elif currentAction == "accepting a file":
-			log.write(base+": SUCCESS, you didn't fuck up the filename, let's see if it's already in Piction .... \r\r")
+			log.write(base+": SUCCESS, you didn't fuck up the filename, let's see if it's already in Piction .... \r")
+		elif currentAction == "already in Piction":
+			log.write(base+": Already in Piction, skipping, sucka."+"\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "sending to Piction":
 			log.write(base+" Holy shit this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
 
@@ -87,9 +90,14 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "trying to ftp":
 			log.write("////////    Starting the FTP process for "+base+"    ////////\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "now ftp per file":
-			log.write("Starting to FTP: "+base+"\r\r"+("#"*50)+"\r\r")
-		elif currentAction == "ftp success":
-			log.write("\\\\\\\\\\ Failed to FTP thid folder ////////////")
+			log.write("Starting to FTP: "+base+"\r")
+		elif currentAction == "ftp file success":
+			log.write("Great, looks like "+base+"FTPed OK.... moving on ...\r")
+		elif currentAction == "ftp file failure":
+			log.write(fig.renderText("SAD!")+"\r\rFailed to FTP "+base)
+		elif currentAction == "ftp folder success":
+			log.write("\r"+(isoFig.renderText("WOO HOO"))+"\r\rWe processed "+base+"\r\r"+("#"*50)+"\r\r")
+			# log.write("\\\\\\\\\\ Failed to FTP thid folder ////////////")
 		else:
 			if currentAction == "failed to FTP":
 				log.write("Sorry, couldn't FTP "+base)

@@ -40,6 +40,7 @@ def acceptFile(base,filePath):
 	else:
 		currentAction = "already in Piction"
 		print(base+" found in list, skipping")
+		statusLog(currentAction,filePath,base)
 
 	if currentAction == "sending to Piction":
 		statusLog(currentAction,filePath,base)
