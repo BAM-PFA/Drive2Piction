@@ -23,6 +23,10 @@ And here's the FTP folder structure that Piction expects:
 Non-standard Python modules used:
 [pyfiglet](https://github.com/pwaller/pyfiglet)
 [pexpect](https://github.com/pexpect/pexpect)
+[Python Imaging Library (PIL)](https://pypi.python.org/pypi/PIL)
+[numpy](http://www.numpy.org/)
+
+Really, [Anaconda](https://www.continuum.io/downloads) takes care of a lot of it.
 
 ### File validation
 

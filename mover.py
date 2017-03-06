@@ -62,8 +62,11 @@ def sortSend(base,filePath):
 
 def rejectFile(base,filePath):
 	try:		
-		print("moving")
-		shutil.copy(filePath,rejectPath)
+		if not base in os.listdir(rejectPath):
+			print("moving")
+			shutil.copy(filePath,rejectPath)
+		else:
+			print("Already rejected")
 	except shutil.Error as error:
 		randomNumber = str(randint(100,999))
 		currentAction = "renaming a duplicate file"

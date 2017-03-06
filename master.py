@@ -24,6 +24,8 @@ try:
 	statusLog(currentAction,root,File)
 	os.chdir(ftpRoot)
 	put(thisFolder)
+	currentAction = "done"
+	statusLog(currentAction,thisFolder,File)
 except:
 	currentAction = "failure"
 	File = "Failed to start"

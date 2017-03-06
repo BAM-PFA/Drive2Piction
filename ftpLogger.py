@@ -9,10 +9,33 @@ today = str(date.today())
 filmPath = "Research_Hub_Collections/RH_PFA_Film_Stills_Series_Collection"
 eventPath = "Research_Hub_Collections/RH_Events"
 exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
-pathToLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_checker-log.txt"
+pathToLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt"
 
 fig = Figlet(font='fantasy_')
+caliFig = Figlet(font='caligraphy')
 isoFig = Figlet(font='isometric3')
+
+## ~~ DON'T LOOK AT THIS, NOTHING TO SEE HERE, MOVE ALONG ~~ ##
+
+from PIL import Image
+import numpy as np
+
+chars = np.asarray(list(' .,:;irsXA253hMHGS#9B&@'))
+
+f = "trash.png"
+SC= .14 #size adjustment factor
+WCF= 7/4.0 # character width fudge factor.
+GCF= 1.8 #? some strange color correction fudge factor
+
+im = Image.open(f)
+S =( int(round(im.size[0]*SC*WCF)),  int(round(im.size[1]*SC)) )
+img = np.array(im.convert("L").resize(S), dtype=float)
+img -= img.min()
+img = np.rint((1.0 - img/img.max())**GCF*(chars.size-1))
+
+trash =	( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
+
+## ~~ HERE WE GO ~~ ##
 
 def statusLog(currentAction,filePath,base):
 	with open(pathToLog,"a") as log:
@@ -27,19 +50,19 @@ def statusLog(currentAction,filePath,base):
 
 		elif currentAction == "Checking the Filename Format":
 			if "Film " in filePath:
-				log.write(base+": this film still is being checked ...\r")
+				log.write(base+": This film still is being checked ...\r")
 			elif "Event " in filePath:
-				log.write(base+": this event file is being checked ...\r")
+				log.write(base+": This event file is being checked ...\r")
 			else:
 				if "Art " in filePath:
-					log.write(base+": this exhibition file is being checked ...\r")
+					log.write(base+": This exhibition file is being checked ...\r")
 		
 		# CHECKING FOR BAD CHARACTERS AND FILETYPES
 
 		elif currentAction == "Bad characters found":
-			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+" is REJECTED!!! There are illegal characters in the filename!\r\r"+("#"*50)+"\r\r")
+			log.write("\rWOMP WOMP : "+base+" is REJECTED!!! There are illegal characters in the filename!\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "Bad filetype":
-			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+" is REJECTED!!! It isn't even an image!\r\r"+("#"*50)+"\r\r")
+			log.write("\rWOMP WOMP : "+base+" is REJECTED!!! It isn't even an image!\r\r"+("#"*50)+"\r\r")
 
 
 		# ERROR HANDLING FOR DUPLICATE FILES
@@ -49,18 +72,16 @@ def statusLog(currentAction,filePath,base):
 		
 		# CHECKING FILENAME FORMATS
 
-		# elif currentAction == "accepting a film still":
-			# log.write(base+" is a film still that is ok to FTP, go ahead.\r")
 		elif currentAction == "rejecting a film still":
 			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+": try renaming this film still, please.\r\r"+("#"*50)+"\r\r")
 		
 		elif currentAction == "event image name format is ok":
-			log.write(base+": filename format is ok, proceeding to check the date ...\r")
+			log.write(base+": Filename format is ok, proceeding to check the date ...\r")
 		elif currentAction == "rejecting an event image":
 			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+": try renaming this event image, please.\r\r"+("#"*50)+"\r\r")
 		
 		elif currentAction == "exhibition image name format is ok":
-			log.write(base+": filename format is ok, proceeding to check the date ...\r")
+			log.write(base+": Filename format is ok, proceeding to check the date ...\r")
 		elif currentAction == "rejecting an exhibition image":
 			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+": try renaming this exhibition image, please.\r\r"+("#"*50)+"\r\r")
 
@@ -80,7 +101,7 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "already in Piction":
 			log.write(base+": Already in Piction, skipping, sucka."+"\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "sending to Piction":
-			log.write(base+" Holy shit this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
+			log.write(base+": Holy shit this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
 
 
 		## ~~ STARTING THE FTP PROCESS ~~ ##
@@ -89,15 +110,20 @@ def statusLog(currentAction,filePath,base):
 			log.write((("@" * 70) + (("\n@") + ((" ") * 68) + "@") * 2) + ("\n@" + (" " * 6) + "BEGINNING THE FTP PROCESS, HOLD TF ON" + ((" " * 25)+"@\n"))+("@"+(" " * 68) +("@\n"))+("@" * 70)+"\n\n")
 		elif currentAction == "trying to ftp":
 			log.write("////////    Starting the FTP process for "+base+"    ////////\r\r"+("#"*50)+"\r\r")
+		elif currentAction == "nothing to ftp":
+			log.write("\r\r"+fig.renderText('SHUCKS')+"\r\rNothing to see here, moving on.... \r\r"+("#"*50)+"\r\r")
 		elif currentAction == "now ftp per file":
 			log.write("Starting to FTP: "+base+"\r")
 		elif currentAction == "ftp file success":
-			log.write("Great, looks like "+base+"FTPed OK.... moving on ...\r")
+			log.write("Great, looks like "+base+" FTPed OK.... moving on ...\r")
 		elif currentAction == "ftp file failure":
 			log.write(fig.renderText("SAD!")+"\r\rFailed to FTP "+base)
 		elif currentAction == "ftp folder success":
-			log.write("\r"+(isoFig.renderText("WOO HOO"))+"\r\rWe processed "+base+"\r\r"+("#"*50)+"\r\r")
-			# log.write("\\\\\\\\\\ Failed to FTP thid folder ////////////")
+			log.write("\r"+(isoFig.renderText("WOO HOO"))+"\r\rWe processed "+base+"\r\r")
+		elif currentAction == "cleanup":
+			log.write("Now cleaning up the mess\r"+trash+"\r\r"+("#"*50)+"\r\r")
+		elif currentAction == "done":
+			log.write((((("%")*90)+"\r")*2)+caliFig.renderText("DONE")+(((("%")*90)+"\r")*2))
 		else:
 			if currentAction == "failed to FTP":
 				log.write("Sorry, couldn't FTP "+base)

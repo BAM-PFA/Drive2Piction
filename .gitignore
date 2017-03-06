@@ -1,7 +1,10 @@
 # Ignore everything
 *
 
-# Except: .py  .gitignore README.md
+
+# Except: stuff that’s necessary
 !*.py
 !.gitignore
 !README.md
+!trash.png
+!/*/SAMPLE*.txt

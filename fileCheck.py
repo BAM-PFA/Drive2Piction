@@ -56,7 +56,7 @@ def checkFilenameFormat(base,filePath):
 	print("STARTING THE FILECHECK PROCESS")
 	statusLog(currentAction,filePath,base)	
 
-	# FIRST CHECK FOR BAD CHARACTERS AND FILE FORMATS#
+	# FIRST CHECK FOR BAD CHARACTERS #
 	if re.match(badCharacterRegex, base):
 		currentAction = "Bad characters found"
 		statusLog(currentAction,filePath,base)
@@ -71,7 +71,7 @@ def checkFilenameFormat(base,filePath):
 			if re.match(filmRegex,base):
 				currentAction = "accepting a film still"
 				statusLog(currentAction,filePath,base)
-				print("THE FILM STILL IS ACCEPTED"+base)
+				print("THE FILM STILL IS ACCEPTED "+base+"\r")
 				acceptFile(base,filePath)
 			else:
 				currentAction = "rejecting a film still"
@@ -113,7 +113,7 @@ def checkFilenameFormat(base,filePath):
 					currentAction = "exhibition image already rejected"
 					statusLog(currentAction,filePath,base)
 
-# MASTER SCRIPT POINTS HERE, THIS IS THE STARTING POINT
+## ~~ MASTER SCRIPT POINTS HERE, THIS IS THE STARTING POINT ~~ ##
 
 def process(folder):
 	for item in glob(folder,recursive=True):
@@ -124,4 +124,9 @@ def process(folder):
 				if any(x in base for x in imageTypes):
 					print(item)
 					checkFilenameFormat(base,filePath)
+				
+				# REJECT NON-IMAGE FILES OR IMAGES WITHOUT CORRECT FILETYPE #
+				else:
+					currentAction = "Bad filetype"
+					statusLog(currentAction,filePath,base)
 

@@ -18,40 +18,50 @@ def put(folder):
 			pwd = os.getcwd()
 			currentAction = "trying to ftp"
 			statusLog(currentAction,pwd,source)
-
-			child = pexpect.spawnu('ftp ucb1.piction.com') # LOG INTO THE PICTION SERVER
-			child.expect('.*ame.*:')
-			child.sendline('bampfa')
-			child.expect('.*assword.*')
-			child.sendline(answer)
-			child.expect('ftp>')
-			child.sendline('cd Research_Hub_Collections/'+source) # NAVIGATE TO THE CORRESPONDING PICTION FOLDER
-			child.expect('ftp>')
-			child.sendline('prompt off') 
-
-			for file in os.listdir('.'):
-				if not file.startswith("."):
-					if any(x in file for x in imageTypes):
-						print(file+"to ftp")
-						currentAction = "now ftp per file"
-						statusLog(currentAction,pwd,file)
-						try:
-							child.expect('ftp>')
-							child.sendline('mput '+file)
-							currentAction = "ftp file success"
-							statusLog(currentAction,pwd,file)
-						except Error as error:
-							currentAction = "ftp file failure"
-							statusLog(currentAction,pwd,file)
-			try:
-				child.expect('ftp>')
-				currentAction = "ftp folder success"
-				print("SUCCESS WE FTPeD "+source)
+			if ''.join(os.listdir('.')) == '.DS_Store':
+				currentAction = "nothing to ftp"
 				statusLog(currentAction,pwd,source)
-			except Error as error:
-				currentAction = "failed to FTP"
-				print("FAILED TO ftp "+source)
-				pass
+				print("SKIPPING "+source)
+			else:		
+				child = pexpect.spawnu('ftp ucb1.piction.com') # LOG INTO THE PICTION SERVER
+				child.expect('.*ame.*:')
+				child.sendline('bampfa')
+				child.expect('.*assword.*')
+				child.sendline(answer)
+				child.expect('ftp>')
+				child.sendline('cd Research_Hub_Collections/'+source) # NAVIGATE TO THE CORRESPONDING PICTION FOLDER
+				child.expect('ftp>')
+				child.sendline('prompt off') 
+
+				for file in os.listdir('.'):
+					if not file.startswith("."):
+						if any(x in file for x in imageTypes):
+							print(file+"to ftp")
+							currentAction = "now ftp per file"
+							statusLog(currentAction,pwd,file)
+							try:
+								child.expect('ftp>')
+								child.sendline('mput '+file)
+								currentAction = "ftp file success"
+								statusLog(currentAction,pwd,file)
+							except Error as error:
+								currentAction = "ftp file failure"
+								statusLog(currentAction,pwd,file)
+				try:
+					child.expect('ftp>')
+					currentAction = "ftp folder success"
+					print("SUCCESS WE FTPeD "+source)
+					statusLog(currentAction,pwd,source)
+				except Error as error:
+					currentAction = "failed to FTP"
+					print("FAILED TO ftp "+source)
+					pass
+				fileList = os.listdir('.')
+				for item in fileList:
+					if not item == '.DS_Store':
+						os.remove(item)
+				currentAction = "cleanup"
+				statusLog(currentAction,pwd,source)
 			os.chdir(root)
 
 	# child.interact()
