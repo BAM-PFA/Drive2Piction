@@ -1,74 +1,66 @@
 #! usr/bin/env python
 
-import os, shutil, re
+import os, shutil, re, glob
 from datetime import date
-import glob
-from pathlib import Path
-from ftpLogger import statusLog
+# from pathlib import Path
+from ftpLogger import statusLog, rejectLog
 
 eventFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_Events"
 artFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_Gallery_Exhibitions"
 filmFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_PFA_Film_Stills_Series_Collection"
-
-driveGlobPath = "/Users/michael/Desktop/Drive/*"
-driveRoot = "/Users/michael/Desktop/Drive"
 rejectPath = "/Users/michael/Desktop/drive2Piction/FTPs/_Rejects/"
 
-listLog = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
-listLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt")
+listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
+rejectLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt"
 
 today = str(date.today())
 
-if listLogPath.is_file():
-	print("the masterList exists, way to go.")
-else:
-	with open(listLog,"w") as List:
-		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
+with open(listLogFile,"r") as logged:
+	loggedList = list(logged)
+	allLogged = ''.join(loggedList)		
 
-with open(listLog,"r") as read:
-	textAsList = list(read)
-	allText = ''.join(textAsList)		
+with open(rejectLogFile,"r") as rejects:
+	rejectList = list(rejects)
+	allRejects = ''.join(rejectList)
 
 def acceptFile(base,filePath):
 	currentAction = "accepting a file"
 	print(currentAction)
 	statusLog(currentAction,filePath,base)
-	if not re.search(base,allText):
+	if not re.search(base,allLogged):
 		currentAction = "sending to Piction"
 		print(base+" not in list")
-		# statusLog(currentAction,pwd,base)
+		statusLog(currentAction,filePath,base)
+		sortSend(base,filePath)
+
 	else:
 		currentAction = "already in Piction"
 		print(base+" found in list, skipping")
 		statusLog(currentAction,filePath,base)
 
-	if currentAction == "sending to Piction":
-		statusLog(currentAction,filePath,base)
-		sortSend(base,filePath)
-		with open(listLog,"a") as masterList:
-			masterList.write(base+" sent to Piction on "+today+"\n")
-	else:
-		pass
 
 def sortSend(base,filePath):
 	if "Film" in filePath:
-		shutil.copy(filePath,filmFTPpath)
+		if not base in os.listdir(filmFTPpath):
+			shutil.copy(filePath,filmFTPpath)
 	elif "Event" in filePath:
-		shutil.copy(filePath, eventFTPpath)
+		if not base in os.listdir(eventFTPpath):
+			shutil.copy(filePath, eventFTPpath)
 	else:
 		if "Art" in filePath:
-			shutil.copy(filePath,artFTPpath)
+			if not base in os.listdir(artFTPpath):
+				shutil.copy(filePath,artFTPpath)
 
 
 def rejectFile(base,filePath):
-	try:		
-		if not base in os.listdir(rejectPath):
-			print("moving")
+	if not base in os.listdir(rejectPath):
+		if not re.search(base,allRejects):
+			print("rejecting"+filePath)
+			# HAVING THIS CHMOD HERE BROKE THINGS, BUT I STILL NEED TO CHANGE PERMISSIONS. COPYING
+			# FROM THE DRIVE FOLDER KEEPS SOME STUPID PERMISSIONS AND I CAN'T RENAME REJECTED FILES.
+			# MAYBE COULD PUT THIS IN THE MASTER SCRIPT AFTER EVERYTHING IS DONE?
+			os.chmod(filePath,0o770)
+			rejectLog(base)
 			shutil.copy(filePath,rejectPath)
-		else:
-			print("Already rejected")
-	except shutil.Error as error:
-		randomNumber = str(randint(100,999))
-		currentAction = "renaming a duplicate file"
-		statusLog(currentAction,filePath,base)
-		os.rename(base,rejectPath+randomNumber+"_copy-of_"+base)
+	else:
+		print("Already rejected")

@@ -12,7 +12,7 @@ import os, re, shutil, datetime, time
 
 today = str(date.today())
 timeStamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d:%H:%M:%S:%f'))
-root = "/Users/michael/Desktop/Drive"
+# root = "/Users/michael/Desktop/Drive"
 
 year = "((19|20)*([0-9]{2}|[0-9]{4})+)" # matches optional century, has to have either 2 or 4 digits
 month = "(0[1-9]|1[012])"
@@ -31,12 +31,14 @@ mmddyyyy = month+"-*"+day+"-*"+year # since day is optional this also covers mmy
 wordmonthYear = wordMonths+"-*"+day+"-*"+year+"*"
 yearWordmonth = year+"-*"+wordMonths+"-*"+day
 
-imageTypes = [".jpg",".tif",".jpeg",".tiff",".png"]
+imageTypes = [".jpg",".JPG",".tif",".TIF",".jpeg",".JPEG",".tiff",".TIFF",".png",".PNG"]
 combinedDateFormats = re.compile(r''+'.*_(('+year+')|('+yyyymmdd+')|('+mmddyyyy+')|('+wordmonthYear+')|('+yearWordmonth+'))_.*',re.IGNORECASE)
-filmRegex = re.compile(r'^([A-Za-z]+)(\_|-)*([A-Za-z0-9]*(\_|-))*(\d{3}\.(jpg|tif|py))')
-eventRegex = re.compile(r'^(event)_(([a-z]|[0-9])*(\_|-))+(\d{3}\.)(jpg|tif|py)',re.IGNORECASE)
-exhibitionRegex = re.compile(r'(([a-z]|[0-9])*(\_|-))+(\d{3}\.)(jpg|tif|png|py)',re.IGNORECASE)
-badCharacterRegex = re.compile(r'(.*)(\$|%|\^|&|\*|#|@|!|\)|\(|\*|\+|=|\ )(.*)',re.IGNORECASE)
+filmRegex = re.compile(r'^([a-z]+)(\_|-)*([a-z0-9]*(\_|-))*(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
+eventRegex = re.compile(r'^(event)_(([a-z]|[0-9])*(\_|-))+(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
+exhibitionRegex = re.compile(r'(([a-z]|[0-9])*(\_|-))+(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
+badCharacterRegex = re.compile(r'(.*)(\$|%|\^|&|\*|#|@|!|\)|\(|\*|\+|=|\ |á|à|ä|å|À|Á|è|é| \
+					ê|ë|È|É|Ò|Ó|Ö|ò|ó|ô|ö|â|ì|í|Ì|Í|î|ü|Ü|Ú|Ù|ù|ú|©|¿|\?|\“| \
+					\”|\"|\/|\’|\‘|\'|\´|\`|¨|\')(.*)',re.IGNORECASE) # WOW THIS IS A LONG LIST (AN ACCENTED é KILLED THE SCRIPT)
 
 def checkDate(base,filePath):
 	try:
@@ -46,6 +48,8 @@ def checkDate(base,filePath):
 				statusLog(currentAction,filePath,base)
 				acceptFile(base,filePath)	
 			else:
+				currentAction = "bad date"
+				statusLog(currentAction,filePath,base)
 				rejectFile(base, filePath)
 	except FileNotFoundError as ex:
 		currentAction = "event image already rejected"
@@ -69,13 +73,10 @@ def checkFilenameFormat(base,filePath):
 
 		if "Film" in filePath:
 			if re.match(filmRegex,base):
-				currentAction = "accepting a film still"
-				statusLog(currentAction,filePath,base)
 				print("THE FILM STILL IS ACCEPTED "+base+"\r")
 				acceptFile(base,filePath)
 			else:
 				currentAction = "rejecting a film still"
-				reason = "bad film filename"
 				statusLog(currentAction,filePath,base)	
 				rejectFile(base, filePath)
 

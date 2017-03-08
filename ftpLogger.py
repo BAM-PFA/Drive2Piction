@@ -1,19 +1,42 @@
 #! usr/bin/env python
 
+import os, re, shutil, datetime, time
 from datetime import date
 from pyfiglet import Figlet
-import os, re, shutil, datetime, time
+from pathlib import Path
 
 today = str(date.today())
 
 filmPath = "Research_Hub_Collections/RH_PFA_Film_Stills_Series_Collection"
 eventPath = "Research_Hub_Collections/RH_Events"
 exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
-pathToLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt"
+
+pathToFTPLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt"
+listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
+listLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt")
+rejectLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt"
+rejectLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt")
 
 fig = Figlet(font='fantasy_')
 caliFig = Figlet(font='caligraphy')
 isoFig = Figlet(font='isometric3')
+
+if listLogPath.is_file():
+	print("the masterList exists, way to go.")
+	with open(listLogFile,"a") as List:
+		List.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
+else:
+	with open(listLogFile,"w") as List:
+		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
+
+if rejectLogPath.is_file():
+	print("the rejectList exists, way to go.")
+	with open(rejectLogFile,"a") as todayDivider:
+		todayDivider.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
+else:
+	with open(rejectLogFile,"w") as List:
+		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"REJECTED FROM PICTION. Started "+today+((" " * 23)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
+
 
 ## ~~ DON'T LOOK AT THIS, NOTHING TO SEE HERE, MOVE ALONG ~~ ##
 
@@ -35,10 +58,18 @@ img = np.rint((1.0 - img/img.max())**GCF*(chars.size-1))
 
 trash =	( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
 
-## ~~ HERE WE GO ~~ ##
+## ~~ HERE'S THE STUFF ~~ ##
+
+def rejectLog(base):
+	with open(rejectLogFile,"a") as rejected:
+		rejected.write(base+" rejected on "+today+"\n")
+
+def listLog(base):
+	with open(listLogFile,"a") as masterList:
+		masterList.write(base+" sent to Piction on "+today+"\n")
 
 def statusLog(currentAction,filePath,base):
-	with open(pathToLog,"a") as log:
+	with open(pathToFTPLog,"a") as log:
 		
 		## ~~ TURNING THINGS ON ~~ ##
 
@@ -99,7 +130,7 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "accepting a file":
 			log.write(base+": SUCCESS, you didn't fuck up the filename, let's see if it's already in Piction .... \r")
 		elif currentAction == "already in Piction":
-			log.write(base+": Already in Piction, skipping, sucka."+"\r\r"+("#"*50)+"\r\r")
+			log.write(base+": Already in Piction, skipping this file."+"\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "sending to Piction":
 			log.write(base+": Holy shit this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
 
