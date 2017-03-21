@@ -1,6 +1,6 @@
-#! usr/bin/env python
+#!/Users/michael/anaconda/bin/python
 
-import os, re, pexpect
+import os, re, pexpect, codecs
 from glob import glob
 from ftpLogger import statusLog, listLog
 
@@ -12,7 +12,7 @@ with open('/Users/michael/Desktop/drive2Piction/PictionFTP/pictioneer.txt','r') 
 	pwordList = list(pword)
 	answer = pwordList[0]
 
-with open(listLogFile,"r") as read:
+with open(listLogFile,"r",encoding="utf-8") as read:
 	textAsList = list(read)
 	allText = ''.join(textAsList)
 
@@ -73,5 +73,4 @@ def put(folder):
 				statusLog(currentAction,pwd,source)
 			os.chdir(root)
 		else:
-			pass	
-	# child.interact()
+			pass

@@ -1,8 +1,7 @@
-#! usr/bin/env python
+#!/Users/michael/anaconda/bin/python
 
 from datetime import date
 from glob import glob
-# from subprocess import Popen, PIPE
 from random import randint
 from ftpLogger import statusLog
 from mover import acceptFile, rejectFile
@@ -12,7 +11,6 @@ import os, re, shutil, datetime, time
 
 today = str(date.today())
 timeStamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d:%H:%M:%S:%f'))
-# root = "/Users/michael/Desktop/Drive"
 
 year = "((19|20)*([0-9]{2}|[0-9]{4})+)" # matches optional century, has to have either 2 or 4 digits
 month = "(0[1-9]|1[012])"
@@ -117,8 +115,9 @@ def checkFilenameFormat(base,filePath):
 ## ~~ MASTER SCRIPT POINTS HERE, THIS IS THE STARTING POINT ~~ ##
 
 def process(folder):
-	for item in glob(folder,recursive=True):
+	for item in glob("'"+folder+"'",recursive=True):  # HAD TO ADD EXTRA QUOTES FOR CRON / LAUNCH DAEMON TO BE ABLE TO HANDLE THIS VARIABLE
 		filePath = os.path.abspath(item)
+		print(filePath)
 		base = os.path.basename(item)
 		if os.path.isfile(item):
 			if not item.startswith("."):

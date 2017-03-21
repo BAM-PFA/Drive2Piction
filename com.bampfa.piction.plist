@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--Put this file in /Library/LaunchDaemons then [launchctl load -w com.bampfa.piction.plist]; if you run into errors you need to unload and load each time you make a change to this file.-->
+<dict>
+	<key>Label</key>
+	<string>com.bampfa.piction</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/USER/anaconda/bin/python</string>
+		<string>/Users/USER/Desktop/drive2Piction/FTPs/master.py</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<array>
+		<dict>
+			<key>Hour</key>
+			<integer>19</integer>
+			<key>Minute</key>
+			<integer>45</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

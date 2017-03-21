@@ -1,4 +1,4 @@
-#! usr/bin/env python
+#!/Users/michael/anaconda/bin/python
 
 import os
 from fileCheck import process
@@ -20,22 +20,19 @@ try:
 	os.chdir(root)
 	File = "Start"
 	statusLog(currentAction,root,File)
+	# print(os.getcwd())
 	process(driveSourceFolder)
 	currentAction = "time to ftp"
+
 	File = "Ftp"
 	statusLog(currentAction,root,File)
 	os.chdir(ftpRoot)
 	put(globPattern)
 	currentAction = "done"
 	statusLog(currentAction,driveSourceFolder,File)
-	print((("*")*100)+"\nDONE\n"+(("*")*100))   
-	# CHMOD IS NEEDED BECAUSE FILE PERMISSIONS ARE EITHER RESTRICTED
-	# BY DRIVE OR COME FROM OTHER SOURCES AS RESTRICTED
-	# IT COULD HAPPEN HERE AFTER EVERTHING IS DONE, OR AT THE POINT
-	# OF MOVING.
-	# os.chdir(rejectPath)
-	# for file in os.listdir('.'):
-	# 	os.chmod(file,0o770)
+	print((("*")*100)+"\nDONE\n"+(("*")*100))
+	# I HAD PUT THE CHMOD 770 HERE AFTER EVERYTHING WAS COMPLETE,
+	# BUT I MOVED IT TO THE MOVER SCRIPT. SEEMS OK THERE.
 except:
 	currentAction = "failure"
 	File = "Failed to start"

@@ -1,6 +1,6 @@
-#! usr/bin/env python
+#!/Users/michael/anaconda/bin/python
 
-import os, re, shutil, datetime, time
+import os, re, shutil, datetime, time, codecs
 from datetime import date
 from pyfiglet import Figlet
 from pathlib import Path
@@ -12,6 +12,7 @@ eventPath = "Research_Hub_Collections/RH_Events"
 exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
 
 pathToFTPLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt"
+FTPlogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt")
 listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
 listLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt")
 rejectLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt"
@@ -21,22 +22,27 @@ fig = Figlet(font='fantasy_')
 caliFig = Figlet(font='caligraphy')
 isoFig = Figlet(font='isometric3')
 
+if FTPlogPath.is_file():
+	print("there's a list for "+today+" already.")
+else:
+	with open(pathToFTPLog,"w",encoding="utf-8") as f:
+		print("starting a log for "+today)
+
 if listLogPath.is_file():
 	print("the masterList exists, way to go.")
-	with open(listLogFile,"a") as List:
+	with open(listLogFile,"a",encoding="utf-8") as List:
 		List.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
-	with open(listLogFile,"w") as List:
+	with open(listLogFile,"w",encoding="utf-8") as List:
 		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 if rejectLogPath.is_file():
 	print("the rejectList exists, way to go.")
-	with open(rejectLogFile,"a") as todayDivider:
+	with open(rejectLogFile,"a",encoding="utf-8") as todayDivider:
 		todayDivider.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
-	with open(rejectLogFile,"w") as List:
+	with open(rejectLogFile,"w",encoding="utf-8") as List:
 		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"REJECTED FROM PICTION. Started "+today+((" " * 23)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
-
 
 ## ~~ DON'T LOOK AT THIS, NOTHING TO SEE HERE, MOVE ALONG ~~ ##
 
@@ -45,7 +51,7 @@ import numpy as np
 
 chars = np.asarray(list(' .,:;irsXA253hMHGS#9B&@'))
 
-f = "trash.png"
+f = "/Users/michael/Desktop/drive2Piction/FTPs/trash.png"
 SC= .14 #size adjustment factor
 WCF= 7/4.0 # character width fudge factor.
 GCF= 1.8 #? some strange color correction fudge factor
@@ -61,15 +67,15 @@ trash =	( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
 ## ~~ HERE'S THE STUFF ~~ ##
 
 def rejectLog(base):
-	with open(rejectLogFile,"a") as rejected:
+	with open(rejectLogFile,"a",encoding="utf-8") as rejected:
 		rejected.write(base+" rejected on "+today+"\n")
 
 def listLog(base):
-	with open(listLogFile,"a") as masterList:
+	with open(listLogFile,"a",encoding="utf-8") as masterList:
 		masterList.write(base+" sent to Piction on "+today+"\n")
 
 def statusLog(currentAction,filePath,base):
-	with open(pathToFTPLog,"a") as log:
+	with open(pathToFTPLog,"a",encoding="utf-8") as log:
 		
 		## ~~ TURNING THINGS ON ~~ ##
 
@@ -78,6 +84,8 @@ def statusLog(currentAction,filePath,base):
 			log.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4) +("HELLO AND WELCOME TO THE DRIVE/PICTION FTP LOG FOR ")+ today + ((" " * 3)+"#\n"))+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 		## ~~ STARTING THE FILENAME CHECK PROCESS ~~ ##
+
+
 
 		elif currentAction == "Checking the Filename Format":
 			if "Film " in filePath:
@@ -93,8 +101,7 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "Bad characters found":
 			log.write("\rWOMP WOMP : "+base+" is REJECTED!!! There are illegal characters in the filename!\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "Bad filetype":
-			log.write("\rWOMP WOMP : "+base+" is REJECTED!!! It isn't even an image!\r\r"+("#"*50)+"\r\r")
-
+			log.write("\rWOMP WOMP : "+filePath+base+" is REJECTED!!! It isn't even an image!\r\r"+("#"*50)+"\r\r")
 
 		# ERROR HANDLING FOR DUPLICATE FILES
 
@@ -146,7 +153,7 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "now ftp per file":
 			log.write("Starting to FTP: "+base+"\r")
 		elif currentAction == "ftp file success":
-			log.write("Great, looks like "+base+" FTPed OK.... moving on ...\r")
+			log.write("Great, looks like "+base+" FTPed OK.... moving on ...\r\r")
 		elif currentAction == "ftp file failure":
 			log.write(fig.renderText("SAD!")+"\r\rFailed to FTP "+base)
 		elif currentAction == "ftp folder success":
@@ -158,3 +165,17 @@ def statusLog(currentAction,filePath,base):
 		else:
 			if currentAction == "failed to FTP":
 				log.write("Sorry, couldn't FTP "+base)
+
+'''
+KIND OF WANT TO USE THIS DRAGON FROM COWSAY:
+import subprocess
+from pyfiglet import Figlet
+
+fig = Figlet(font = 'fantasy_')
+
+hello = ((("#")*20)+"\n\n"+((" ")*5)+"HELLO AND WELCOME TO THE FTP LOG FOR \n\n"+(("#")*20))
+
+file = open('dragon.txt ','w')
+
+dragon = subprocess.call(['cowsay','-f','dragon',hello],stdout=file)
+'''
