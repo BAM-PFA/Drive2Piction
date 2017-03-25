@@ -1,6 +1,6 @@
-#!/Users/michael/anaconda/bin/python
+#!/Users/michael/anaconda/bin/python3.5
 
-import os, shutil, re, glob, codecs
+import os, shutil, re
 from datetime import date
 from ftpLogger import statusLog, rejectLog
 
@@ -14,11 +14,11 @@ rejectLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt"
 
 today = str(date.today())
 
-with open(listLogFile,"r",encoding="utf-8") as logged:
+with open(listLogFile,"r+",encoding="utf-8") as logged:
 	loggedList = list(logged)
 	allLogged = ''.join(loggedList)		
 
-with open(rejectLogFile,"r",encoding="utf-8") as rejects:
+with open(rejectLogFile,"r+",encoding="utf-8") as rejects:
 	rejectList = list(rejects)
 	allRejects = ''.join(rejectList)
 
@@ -38,20 +38,21 @@ def acceptFile(base,filePath):
 
 
 def sortSend(base,filePath):
-	if "Film" in filePath:
+	if "Film " in filePath:
 		if not base in os.listdir(filmFTPpath):
 			shutil.copy(filePath,filmFTPpath)
-	elif "Event" in filePath:
+	elif "Events " in filePath:
 		if not base in os.listdir(eventFTPpath):
 			shutil.copy(filePath, eventFTPpath)
 	else:
-		if "Art" in filePath:
+		if "Exhibitions " in filePath:
 			if not base in os.listdir(artFTPpath):
 				shutil.copy(filePath,artFTPpath)
 
 
 def rejectFile(base,filePath):
-	if not re.search(base,allRejects):
+	# if not re.search(base,allRejects):
+	if not base in allRejects:	
 		print("rejecting"+filePath)
 		# HAVE TO RESET PERMISSIONS ON THESE FILES, NOT TOTALLY
 		# SURE WHY, BUT THEY GET SET INCONSISTENTLY BY DRIVE (?)

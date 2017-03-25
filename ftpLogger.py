@@ -1,4 +1,4 @@
-#!/Users/michael/anaconda/bin/python
+#!/Users/michael/anaconda/bin/python3.5
 
 import os, re, shutil, datetime, time, codecs
 from datetime import date
@@ -12,11 +12,11 @@ eventPath = "Research_Hub_Collections/RH_Events"
 exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
 
 pathToFTPLog = "/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt"
-FTPlogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/"+today+"_FTP-log.txt")
+FTPlogPath = Path(pathToFTPLog)
 listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
-listLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt")
+listLogPath = Path(listLogFile)
 rejectLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt"
-rejectLogPath = Path("/Users/michael/Desktop/drive2Piction/FTPs/masterRejectList.txt")
+rejectLogPath = Path(rejectLogFile)
 
 fig = Figlet(font='fantasy_')
 caliFig = Figlet(font='caligraphy')
@@ -25,23 +25,23 @@ isoFig = Figlet(font='isometric3')
 if FTPlogPath.is_file():
 	print("there's a list for "+today+" already.")
 else:
-	with open(pathToFTPLog,"w",encoding="utf-8") as f:
+	with open(pathToFTPLog,"w+",encoding="utf-8") as f:
 		print("starting a log for "+today)
 
 if listLogPath.is_file():
 	print("the masterList exists, way to go.")
-	with open(listLogFile,"a",encoding="utf-8") as List:
+	with open(listLogFile,"a+",encoding="utf-8") as List:
 		List.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
-	with open(listLogFile,"w",encoding="utf-8") as List:
+	with open(listLogFile,"w+",encoding="utf-8") as List:
 		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 if rejectLogPath.is_file():
 	print("the rejectList exists, way to go.")
-	with open(rejectLogFile,"a",encoding="utf-8") as todayDivider:
+	with open(rejectLogFile,"a+",encoding="utf-8") as todayDivider:
 		todayDivider.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
-	with open(rejectLogFile,"w",encoding="utf-8") as List:
+	with open(rejectLogFile,"w+",encoding="utf-8") as List:
 		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"REJECTED FROM PICTION. Started "+today+((" " * 23)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 ## ~~ DON'T LOOK AT THIS, NOTHING TO SEE HERE, MOVE ALONG ~~ ##
@@ -67,15 +67,15 @@ trash =	( "\n".join( ("".join(r) for r in chars[img.astype(int)]) ) )
 ## ~~ HERE'S THE STUFF ~~ ##
 
 def rejectLog(base):
-	with open(rejectLogFile,"a",encoding="utf-8") as rejected:
+	with open(rejectLogFile,"a+",encoding="utf-8") as rejected:
 		rejected.write(base+" rejected on "+today+"\n")
 
 def listLog(base):
-	with open(listLogFile,"a",encoding="utf-8") as masterList:
+	with open(listLogFile,"a+",encoding="utf-8") as masterList:
 		masterList.write(base+" sent to Piction on "+today+"\n")
 
 def statusLog(currentAction,filePath,base):
-	with open(pathToFTPLog,"a",encoding="utf-8") as log:
+	with open(pathToFTPLog,"a+",encoding="utf-8") as log:
 		
 		## ~~ TURNING THINGS ON ~~ ##
 
@@ -90,10 +90,10 @@ def statusLog(currentAction,filePath,base):
 		elif currentAction == "Checking the Filename Format":
 			if "Film " in filePath:
 				log.write(base+": This film still is being checked ...\r")
-			elif "Event " in filePath:
+			elif "Events " in filePath:
 				log.write(base+": This event file is being checked ...\r")
 			else:
-				if "Art " in filePath:
+				if "Exhibitions " in filePath:
 					log.write(base+": This exhibition file is being checked ...\r")
 		
 		# CHECKING FOR BAD CHARACTERS AND FILETYPES

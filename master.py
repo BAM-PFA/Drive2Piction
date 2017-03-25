@@ -1,4 +1,4 @@
-#!/Users/michael/anaconda/bin/python
+#!/Users/michael/anaconda/bin/python3.5
 
 import os
 from fileCheck import process
@@ -12,7 +12,8 @@ root = "/Users/michael/Google Drive"
 ftpRoot = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections"
 rejectPath = "/Users/michael/Desktop/drive2Piction/FTPs/_Rejects"
 
-driveSourceFolder = "**/Images */**"
+driveSourceFolder = "/**/Images */**"
+# driveSourceFolder = "/Users/michael/Google Drive/**/Images */**"
 globPattern = "**"
 
 try:
@@ -20,8 +21,7 @@ try:
 	os.chdir(root)
 	File = "Start"
 	statusLog(currentAction,root,File)
-	# print(os.getcwd())
-	process(driveSourceFolder)
+	process(root)
 	currentAction = "time to ftp"
 
 	File = "Ftp"
@@ -34,6 +34,7 @@ try:
 	# I HAD PUT THE CHMOD 770 HERE AFTER EVERYTHING WAS COMPLETE,
 	# BUT I MOVED IT TO THE MOVER SCRIPT. SEEMS OK THERE.
 except:
-	currentAction = "failure"
-	File = "Failed to start"
-	statusLog(currentAction,root,File)
+	# currentAction = "failure"
+	# File = "Failed to start"
+	# statusLog(currentAction,root,File)
+	pass

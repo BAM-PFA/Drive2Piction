@@ -1,4 +1,4 @@
-#!/Users/michael/anaconda/bin/python
+#!/Users/michael/anaconda/bin/python3.5
 
 import os, re, pexpect, codecs
 from glob import glob
@@ -8,7 +8,7 @@ root = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections"
 listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
 
 
-with open('/Users/michael/Desktop/drive2Piction/PictionFTP/pictioneer.txt','r') as pword:
+with open('/Users/michael/Desktop/drive2Piction/PictionFTP/pictioneer.txt','r',encoding="utf-8") as pword:
 	pwordList = list(pword)
 	answer = pwordList[0]
 
