@@ -1,6 +1,6 @@
 #!/Users/michael/anaconda/bin/python3.5
 
-import os, shutil, re
+import os, shutil, re, glob
 from datetime import date
 from ftpLogger import statusLog, rejectLog
 
@@ -51,13 +51,18 @@ def sortSend(base,filePath):
 
 
 def rejectFile(base,filePath):
+	print("Starting the rejection process...")
+
 	# if not re.search(base,allRejects):
-	if not base in allRejects:	
-		print("rejecting"+filePath)
+	if not base in allRejects:
+		print("rejecting "+base)
 		# HAVE TO RESET PERMISSIONS ON THESE FILES, NOT TOTALLY
 		# SURE WHY, BUT THEY GET SET INCONSISTENTLY BY DRIVE (?)
-		os.chmod(filePath,0o770)
+		# nevermind, this keeps breaking the script. Will file this step in to-do.
+		# os.chmod(filePath,0o770)
 		rejectLog(base)
-		shutil.copy(filePath,rejectPath)
+		for File in glob.glob(filePath):
+			shutil.copy(File,rejectPath)
+			# os.chmod(rejectPath+"/"+File,0o770)
 	else:
 		print("Already rejected")

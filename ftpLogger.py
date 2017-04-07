@@ -1,6 +1,6 @@
 #!/Users/michael/anaconda/bin/python3.5
 
-import os, re, shutil, datetime, time, codecs
+import os, re, shutil, datetime, time
 from datetime import date
 from pyfiglet import Figlet
 from pathlib import Path
@@ -34,7 +34,7 @@ if listLogPath.is_file():
 		List.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
 	with open(listLogFile,"w+",encoding="utf-8") as List:
-		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
+		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF PICS"+(" " * 23)+"#\n#" + (" " * 4)+"SENT TO PICTION VIA GOOGLE DRIVE. Started "+today+((" " * 12)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 if rejectLogPath.is_file():
 	print("the rejectList exists, way to go.")
@@ -42,7 +42,7 @@ if rejectLogPath.is_file():
 		todayDivider.write("\r"+(("*")*100)+("\r\r")+fig.renderText(today)+("\r\r")+(("*")*100)+"\r")
 else:
 	with open(rejectLogFile,"w+",encoding="utf-8") as List:
-		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF SHIT"+(" " * 23)+"#\n#" + (" " * 4)+"REJECTED FROM PICTION. Started "+today+((" " * 23)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
+		List.write((("#" * 70) + (("\n#") + ((" ") * 68) + "#") * 2) + ("\n#" + (" " * 4)) + "HELLO AND WELCOME TO THE BIG LIST OF PICS"+(" " * 23)+"#\n#" + (" " * 4)+"REJECTED FROM PICTION. Started "+today+((" " * 23)+"#\n")+("#"+(" " * 68) +("#\n"))+("#" * 70)+"\n\n")
 
 ## ~~ DON'T LOOK AT THIS, NOTHING TO SEE HERE, MOVE ALONG ~~ ##
 
@@ -91,7 +91,7 @@ def statusLog(currentAction,filePath,base):
 			if "Film " in filePath:
 				log.write(base+": This film still is being checked ...\r")
 			elif "Events " in filePath:
-				log.write(base+": This event file is being checked ...\r")
+				log.write(filePath+base+": This event file is being checked ...\r")
 			else:
 				if "Exhibitions " in filePath:
 					log.write(base+": This exhibition file is being checked ...\r")
@@ -99,7 +99,7 @@ def statusLog(currentAction,filePath,base):
 		# CHECKING FOR BAD CHARACTERS AND FILETYPES
 
 		elif currentAction == "Bad characters found":
-			log.write("\rWOMP WOMP : "+base+" is REJECTED!!! There are illegal characters in the filename!\r\r"+("#"*50)+"\r\r")
+			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+" is REJECTED!!! There are illegal characters in the filename!\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "Bad filetype":
 			log.write("\rWOMP WOMP : "+filePath+base+" is REJECTED!!! It isn't even an image!\r\r"+("#"*50)+"\r\r")
 
@@ -127,19 +127,17 @@ def statusLog(currentAction,filePath,base):
 
 		elif currentAction == "checking date":
 			log.write("... Ok now we are checking the date on "+base+" ... \r")
-		# elif currentAction == "accepting date":
-		# 	log.write(base+": SUCCESS, you didn't fuck up the filename, let's FTP this sucker .... \r\r"+("#"*50)+"\r\r")
 		elif currentAction == "bad date":
 			log.write("\r\r"+fig.renderText('ERROR!!!')+'\r'+base+":  Oops, the date format is incorrect, please check it and rename it.\r\r"+("#"*50)+"\r\r")
 
 		# ACCEPTING FILENAME FORMAT, CHECKING FOR DUPE IN PICTION FTP LIST
 
 		elif currentAction == "accepting a file":
-			log.write(base+": SUCCESS, you didn't fuck up the filename, let's see if it's already in Piction .... \r")
+			log.write(base+": SUCCESS, you didn't mess up the filename, let's see if it's already in Piction .... \r")
 		elif currentAction == "already in Piction":
 			log.write(base+": Already in Piction, skipping this file."+"\r\r"+("#"*50)+"\r\r")
 		elif currentAction == "sending to Piction":
-			log.write(base+": Holy shit this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
+			log.write(base+": Holy moly this file is ready to be FTPed\r\r"+("#"*50)+"\r\r")
 
 
 		## ~~ STARTING THE FTP PROCESS ~~ ##
@@ -173,7 +171,7 @@ from pyfiglet import Figlet
 
 fig = Figlet(font = 'fantasy_')
 
-hello = ((("#")*20)+"\n\n"+((" ")*5)+"HELLO AND WELCOME TO THE FTP LOG FOR \n\n"+(("#")*20))
+hello = ((("#")*39)+"\n\n"+((" ")*5)+"HELLO AND WELCOME TO THE FTP LOG FOR:\n\n"+today+"\n\n"+(("#")*39))
 
 file = open('dragon.txt ','w')
 

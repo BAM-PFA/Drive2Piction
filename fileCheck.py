@@ -1,14 +1,9 @@
 #!/Users/michael/anaconda/bin/python3.5
 
+import os, re, datetime, time
 from datetime import date
-from glob import glob
-from random import randint
 from ftpLogger import statusLog
 from mover import acceptFile, rejectFile
-from pathlib import Path
-from time import sleep
-
-import os, re, shutil, datetime, time, getpass
 
 today = str(date.today())
 timeStamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d:%H:%M:%S:%f'))
@@ -23,10 +18,6 @@ eventPath = "Research_Hub_Collections/RH_Events"
 exhibitionPath = "Research_Hub_Collections/RH_Gallery_Exhibitions"
 root = "/Users/michael/Google Drive"
 
-# ftpPath = "/Users/michael/Desktop/testingFolders/ftpFolder/" # I USED THIS PATH TO TEST THE FILE CHECKER.
-															   # ONCE THE FILE CHECKER WAS COMPLETE I COULD PASS FILES
-															   # TO THE FTP SCRIPT INSTEAD.
-
 yyyymmdd = year+"-*"+month+"-*"+day # since day is optional this also covers yyyymm
 mmddyyyy = month+"-*"+day+"-*"+year # since day is optional this also covers mmyyyy
 wordmonthYear = wordMonths+"-*"+day+"-*"+year+"*"
@@ -37,11 +28,10 @@ combinedDateFormats = re.compile(r''+'.*_(('+year+')|('+yyyymmdd+')|('+mmddyyyy+
 filmRegex = re.compile(r'^([a-z]+)(\_|-)*([a-z0-9]*(\_|-))*(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
 eventRegex = re.compile(r'^(event)_(([a-z]|[0-9])*(\_|-))+(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
 exhibitionRegex = re.compile(r'(([a-z]|[0-9])*(\_|-))+(\d{3}\.)([a-z]{3,4})',re.IGNORECASE)
-badCharacterList = ["é","\$","%","\^","&","\*","#","@","!","\)","\(","\*","\+","=","\ ","á","à","ä","å","À","Á","è","é","ê","ë","È","É","Ò","Ó","Ö","ò","ó","ô","ö","â","ì","í","Ì","Í","î","ü","Ü","Ú","Ù","ù","ú","©","¿","\?","\“","\”","\"","\/","\’","\‘","\'","\´","\`","¨","\\"]
-# badCharacterList = [u"\$",u"%",u"\^",u"&",u"\*",u"#",u"@",u"!",u"\)",u"\(",u"\*",u"\+",u"=",u"\ ",u"á",u"à",u"ä",u"å",u"À",u"Á",u"è",u"é",u"ê",u"ë",u"È",u"É",u"Ò",u"Ó",u"Ö",u"ò",u"ó",u"ô",u"ö",u"â",u"ì",u"í",u"Ì",u"Í",u"î",u"ü",u"Ü",u"Ú",u"Ù",u"ù",u"ú",u"©",u"¿",u"\?",u"\“",u"\”",u"\"",u"\/",u"\’",u"\‘",u"\'",u"\´",u"\`",u"¨",u"\\"]
-badCharacterRegex = re.compile(r'(.*)(\$|%|\^|&|\*|#|@|!|\)|\(|\*|\+|=|\ |á|à|ä|å|À|Á|è|é| \
+badCharacterList = ["é","$","%","^","&","*","#","@","!",")","(","*","+","="," ","á","à","ä","å","À","Á","è","é","ê","ë","È","É","Ò","Ó","Ö","ò","ó","ô","ö","â","ì","í","Ì","Í","î","ü","Ü","Ú","Ù","ù","ú","©","¿","?","“","”","\"","/","’","‘","'","´","`","¨","\\"]
+badCharacterRegex = re.compile(r'(.*)(\$|%|\^|&|\*|#|@|!|\)|\(|\*|\+|=|\ |á|à|ä|å|À|Á|è|é|é| \
 					ê|ë|È|É|Ò|Ó|Ö|ò|ó|ô|ö|â|ì|í|Ì|Í|î|ü|Ü|Ú|Ù|ù|ú|©|¿|\?|\“| \
-					\”|\"|\/|\’|\‘|\'|\´|\`|¨|\')(.*)',re.IGNORECASE) # WOW THIS IS A LONG LIST (AN ACCENTED é KILLED THE SCRIPT)
+					\”|\"|\/|\’|\‘|\'|\´|\`|¨|\')(.*)',re.IGNORECASE) # WOW THIS IS A LONG LIST
 
 def checkDate(base,filePath):
 	try:
@@ -59,27 +49,22 @@ def checkDate(base,filePath):
 		statusLog(currentAction,filePath,base)
 
 def checkFilenameFormat(base,filePath):
-	currentAction = "Checking the Filename Format"
-	print("STARTING THE FILECHECK PROCESS")
+	currentAction = "Checking the Filename Format on "
+	print("STARTING THE FILECHECK PROCESS on "+base)
 	statusLog(currentAction,filePath,base)	
 
-	# FIRST CHECK FOR BAD CHARACTERS #
+	# CHECK FOR BAD CHARACTERS. THIS IS SORT OF REDUNDANT 
+	# GIVEN THE CHECK IN process(), BUT IT WILL CATCH ANYTHING THAT SLIPS THROUGH
+
 	if re.match(badCharacterRegex, base):
 		currentAction = "Bad characters found"
 		statusLog(currentAction,filePath,base)
 		print(currentAction+" in "+base)
-		rejectFile 
-		'''
-		for char in ["\$","%","\^","&","\*","#","@","!","\)","\(","\*","\+","=","\ ","á","à","ä","å","À","Á","è","é","ê","ë","È","É","Ò","Ó","Ö","ò","ó","ô","ö","â","ì","í","Ì","Í","î","ü","Ü","Ú","Ù","ù","ú","©","¿","\?","\“","\”","\"","\/","\’","\‘","\'","\´","\`","¨","\\"]:
-			if char in filePath:
-				filePath = filePath.replace(char,"X")
-				base = base.replace(char,"X")
-				rejectFile(base, filePath)
-		'''
+		rejectFile(base,filePath)
+
 	else:	
 		
 		# CHECKING FILM STILLS #
-
 		if "Film " in filePath:
 			if re.match(filmRegex,base):
 				print("THE FILM STILL IS ACCEPTED "+base+"\r")
@@ -89,7 +74,6 @@ def checkFilenameFormat(base,filePath):
 				statusLog(currentAction,filePath,base)	
 				rejectFile(base, filePath)
 
-		
 		# CHECKING EVENT IMAGES #
 		elif "Events " in filePath:
 			try:
@@ -112,9 +96,7 @@ def checkFilenameFormat(base,filePath):
 				try:
 					with open(filePath) as gallImage:
 						if re.match(exhibitionRegex, base):
-							currentAction = "exhibition image name format is ok"
-							statusLog(currentAction,filePath,base)
-							checkDate(base,filePath)
+							acceptFile(base,filePath) # ORIGINALLY THIS SENT EXH IMAGES TO checkDate()
 						else:
 							currentAction = "rejecting an exhibition image"
 							statusLog(currentAction,filePath,base)
@@ -127,33 +109,41 @@ def checkFilenameFormat(base,filePath):
 
 def process(folder):
 	for root, directories, filenames in os.walk(folder):
-		for item in filenames:	
+		if "Images " in root:
+			for item in filenames:
+				if not item.startswith("."):
+					if any(ext in item for ext in imageTypes):
+						print("THIS IS AN IMAGE, DUDE")
 
-			# THE FOLLOWING MAKES IT SO THAT BAD CHARACTERS DONT STOP THE CRON FROM RUNNING 
-			# BUT IT FUCKS UP THE MOVE FUNCTION SINCE THE "FILEPATH" ISN'T WHAT IS ACTUALLY THERE.
-			# FIX THIS ON MONDAY!!! IDEA: DO THE SAME THING BEFORE THE REJECT-MOVE FUNCTION
-
-			for char in badCharacterList:
-				if char in item:
-					print("FOUND THE SHIT")
-					item = item.replace(char,"X X")
-				else:
-					item = item
-
-			base = item
-
-			print(base+"ududududududududuududududududududududuududuudududiodoidodoodoododododoododododo")
-			if "Images " in root:
-				filePath = root+"/"+base               #THIS IS THE ORIGINAL
-
-				print(base)
-				if not base.startswith("."):
-					# print(filePath+base)
-					if any(x in base for x in imageTypes):
-						print(base+" HEY THIS IS AN IMAGE")
+						# THIS STEP REPLACES ALL BAD CHARACTERS WITH AN ASTERISK.						
+						for char in badCharacterList:
+							if char in item:
+								item = item.replace(char,"*")
+						base = item
+						print(base)
+						# THE NEXT FEW LINES CUT OUT ANYTHING BETWEEN THE FIRST ASTERISK AND THE 
+						# CHARACTER AFTER THE LAST ASTERISK. THAT WAY, rejectFile() CAN USE
+						# GLOB TO FIND THE FILEPATH OF THE EXISTING FILE (WITH BAD CHARACTERS
+						# IN THE FILENAME), E.G. thisIsAFileThatHad*BadCharacters.ext
+						charIndex = 0
+						charIndexList = []						
+						while charIndex < len(base):
+							charIndex = base.find('*',charIndex)
+							if charIndex == -1:
+								break
+							charIndexList.append(charIndex)
+							charIndex += 1
+						if not charIndexList == []:
+							base = base[:charIndexList[0]] + base[(charIndexList[-1]):]
+						# AND IF THERE WERE NO ASTERISKS, LEAVE IT ALONE.
+						else:
+							base = base
+						filePath = root+"/"+base
 						checkFilenameFormat(base,filePath)
-					
-					# REJECT NON-IMAGE FILES OR IMAGES WITHOUT CORRECT FILETYPE #
 					else:
+						
+						# REJECT NON-IMAGE FILES OR IMAGES WITHOUT CORRECT FILETYPE #
+						base = item
+						filePath = root+"/"+base
 						currentAction = "Bad filetype"
 						statusLog(currentAction,filePath,base)

@@ -13,7 +13,6 @@ ftpRoot = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections"
 rejectPath = "/Users/michael/Desktop/drive2Piction/FTPs/_Rejects"
 
 driveSourceFolder = "/**/Images */**"
-# driveSourceFolder = "/Users/michael/Google Drive/**/Images */**"
 globPattern = "**"
 
 try:
@@ -31,10 +30,7 @@ try:
 	currentAction = "done"
 	statusLog(currentAction,driveSourceFolder,File)
 	print((("*")*100)+"\nDONE\n"+(("*")*100))
-	# I HAD PUT THE CHMOD 770 HERE AFTER EVERYTHING WAS COMPLETE,
-	# BUT I MOVED IT TO THE MOVER SCRIPT. SEEMS OK THERE.
+
 except:
-	# currentAction = "failure"
-	# File = "Failed to start"
-	# statusLog(currentAction,root,File)
 	pass
+	

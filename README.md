@@ -6,7 +6,7 @@ Currently, for each quarterly program guide published by BAMPFA, staff have to g
 
 Because trying to FTP directly from Drive to Piction is more of a pain than it's worth, these scripts read from a local folder that is synced to the Drive folder our designer uses (aka this is really just a way to validate and FTP local files).
 
-The ```master.py``` script is run by a cron job every evening. 
+The ```master.py``` script is run by a cron job every weekday evening. 
 
 ---
 **Here's the flow of files:**\
@@ -56,6 +56,8 @@ Without declaring UTF-8 as the encoding for all of the text files read by the sc
 
 Since I'm running this every evening long after I've gone home, I have set my computer to wake a couple of minutes before hand every day, then go to sleep an hour later. Otherwise, the cron job (or the launch daemon) wouldn't run.
 
+On Sunday evening a shell script moves the week's FTP logs to a different folder to be archived.
+
 There are a lot of absolute paths specified out of convenience. If I or anyone else here needs to move the scripts or staging folders it will be a pain to redo all these. FYI.
 
 ## File validation
@@ -92,5 +94,7 @@ Part of the script that copies files into the FTP source folder also makes a lis
 
 * Configure logger to note any FTP error codes that are returned
 * Figure out workflow with staff to handle renaming rejected files
-* Maybe autocorect common filename errors (spaces, accented Latin characters)
+* Maybe autocorect common filename errors (spaces, accented Latin characters) 
 * Make things rely less on explicit absolute paths.
+* `chmod` the rejected files so they can be edited in bulk
+* Reconfigure the check on already-processed files so they are skipped altogether (save logging time/space, etc.)

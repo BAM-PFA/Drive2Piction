@@ -19,7 +19,7 @@ with open(listLogFile,"r",encoding="utf-8") as read:
 def put(folder):
 	print(os.getcwd())
 	for source in glob(folder):
-		if not source.startswith("_"):
+		if not source.startswith("_"):  # ONLY THE RESEARCH_HUB_COLLECTIONS/ FOLDER STARTS WITH SOMETHING OTHER THAN '_'
 			os.chdir(source)
 			pwd = os.getcwd()
 			currentAction = "trying to ftp"
