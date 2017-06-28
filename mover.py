@@ -4,9 +4,9 @@ import os, shutil, re, glob
 from datetime import date
 from ftpLogger import statusLog, rejectLog
 
-eventFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_Events"
-artFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_Gallery_Exhibitions"
-filmFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/RH_PFA_Film_Stills_Series_Collection"
+eventFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/Event_Images"
+artFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/Gallery_Exhibition_Images"
+filmFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/Film_Stills"
 rejectPath = "/Users/michael/Desktop/drive2Piction/FTPs/_Rejects"
 
 listLogFile = "/Users/michael/Desktop/drive2Piction/FTPs/masterFTPlogList.txt"
@@ -38,17 +38,26 @@ def acceptFile(base,filePath):
 
 
 def sortSend(base,filePath):
+	print("sorting "+filePath)
 	if "Film " in filePath:
 		if not base in os.listdir(filmFTPpath):
-			shutil.copy(filePath,filmFTPpath)
+			try: 
+				shutil.copy(filePath,filmFTPpath)
+			except:
+				print("couldnt move "+base)
 	elif "Events " in filePath:
 		if not base in os.listdir(eventFTPpath):
-			shutil.copy(filePath, eventFTPpath)
+			try:
+				shutil.copy(filePath, eventFTPpath)
+			except:
+				print("couldnt move "+base)
 	else:
 		if "Exhibitions " in filePath:
 			if not base in os.listdir(artFTPpath):
-				shutil.copy(filePath,artFTPpath)
-
+				try:
+					shutil.copy(filePath,artFTPpath)
+				except:
+					print("couldnt move "+base)
 
 def rejectFile(base,filePath):
 	print("Starting the rejection process...")
