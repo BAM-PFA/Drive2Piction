@@ -162,6 +162,8 @@ def statusLog(currentAction,filePath,base):
 			log.write((((("%")*90)+"\r")*2)+caliFig.renderText("DONE")+(((("%")*90)+"\r")*2))
 		elif currentAction == "failed before FTP":
 			log.write("XXXXXXXX    Failed to FTP at "+filePath+"    XXXXXXXX\r\r"+("#"*50)+"\r\r")
+		elif currentAction == "failed to copy to ftp path":
+			log.write("XXXXX  Failed to copy "+filePath+" to FTP folder XXXXX\r\r"+("#"*50)+"\r\r")
 		else:
 			if currentAction == "failed to FTP":
 				log.write("Sorry, couldn't FTP "+base)

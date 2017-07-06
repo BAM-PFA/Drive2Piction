@@ -44,20 +44,26 @@ def sortSend(base,filePath):
 			try: 
 				shutil.copy(filePath,filmFTPpath)
 			except:
+				currentAction = "failed to copy to ftp path"	
 				print("couldnt move "+base)
+				statusLog(currentAction,filePath,base)
 	elif "Events " in filePath:
 		if not base in os.listdir(eventFTPpath):
 			try:
 				shutil.copy(filePath, eventFTPpath)
 			except:
+				currentAction = "failed to copy to ftp path"	
 				print("couldnt move "+base)
+				statusLog(currentAction,filePath,base)
 	else:
 		if "Exhibitions " in filePath:
 			if not base in os.listdir(artFTPpath):
 				try:
 					shutil.copy(filePath,artFTPpath)
 				except:
+					currentAction = "failed to copy to ftp path"	
 					print("couldnt move "+base)
+					statusLog(currentAction,filePath,base)
 
 def rejectFile(base,filePath):
 	print("Starting the rejection process...")
