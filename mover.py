@@ -3,6 +3,7 @@
 import os, shutil, re, glob
 from datetime import date
 from ftpLogger import statusLog, rejectLog
+from shlex import quote
 
 eventFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/Event_Images"
 artFTPpath = "/Users/michael/Desktop/drive2Piction/FTPs/Research_Hub_Collections/Gallery_Exhibition_Images"
@@ -22,6 +23,23 @@ with open(rejectLogFile,"r+",encoding="utf-8") as rejects:
 	rejectList = list(rejects)
 	allRejects = ''.join(rejectList)
 
+
+def sortSend(base,filePath):
+	print("sorting "+base)
+	if "Film " in filePath:
+		if not base in os.listdir(filmFTPpath):
+			shutil.copy(filePath,filmFTPpath)
+			
+	elif "Events " in filePath:
+		if not base in os.listdir(eventFTPpath):
+			# escaped = re.sub('[\ ]','\\ ',filePath)
+			shutil.copy(filePath, eventFTPpath)
+			
+	else:
+		if "Exhibitions " in filePath:
+			if not base in os.listdir(artFTPpath):
+				shutil.copy(filePath,artFTPpath)
+
 def acceptFile(base,filePath):
 	currentAction = "accepting a file"
 	print(currentAction)
@@ -37,33 +55,7 @@ def acceptFile(base,filePath):
 		statusLog(currentAction,filePath,base)
 
 
-def sortSend(base,filePath):
-	print("sorting "+filePath)
-	if "Film " in filePath:
-		if not base in os.listdir(filmFTPpath):
-			try: 
-				shutil.copy(filePath,filmFTPpath)
-			except:
-				currentAction = "failed to copy to ftp path"	
-				print("couldnt move "+base)
-				statusLog(currentAction,filePath,base)
-	elif "Events " in filePath:
-		if not base in os.listdir(eventFTPpath):
-			try:
-				shutil.copy(filePath, eventFTPpath)
-			except:
-				currentAction = "failed to copy to ftp path"	
-				print("couldnt move "+base)
-				statusLog(currentAction,filePath,base)
-	else:
-		if "Exhibitions " in filePath:
-			if not base in os.listdir(artFTPpath):
-				try:
-					shutil.copy(filePath,artFTPpath)
-				except:
-					currentAction = "failed to copy to ftp path"	
-					print("couldnt move "+base)
-					statusLog(currentAction,filePath,base)
+
 
 def rejectFile(base,filePath):
 	print("Starting the rejection process...")
