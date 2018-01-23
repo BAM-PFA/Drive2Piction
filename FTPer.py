@@ -1,4 +1,4 @@
-#!/Users/michael/anaconda/bin/python3.5
+#!/usr/bin/env python3
 
 import os, re, pexpect, codecs
 from glob import glob
